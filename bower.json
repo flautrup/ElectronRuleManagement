@@ -1,0 +1,13 @@
+{
+  "name": "ChromeRuleManagement",
+  "description": "",
+  "homepage": "",
+  "keywords": [],
+  "author": "",
+  "private": true,
+  "dependencies": {
+    "angular": "angular#latest",
+    "angular-resource": "angular-resource#latest",
+    "angular-material": "latest"
+  }
+}
