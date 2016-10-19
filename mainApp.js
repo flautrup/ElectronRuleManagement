@@ -1,6 +1,7 @@
 //Configuration
 var SERVER = "rd-flp2.qliktech.com";
 var XRFKEY = rand(16);
+const ipc = require('electron').ipcRenderer;
 
 //Supporting functions
 function rand(length, current) {

@@ -1,18 +1,22 @@
 //Service to manage logal storage of rule packages
-service.factory('localStorage', function() {
+service.factory('localStorage', function () {
   // Add support for reading and storing local storage.
   var localpackagelist = [];
 
   return {
-    get: function($scope) {
-      chrome.storage.local.get({
-        'localpackagelist': []
-      }, function(result) {
-        $scope.packageList = result.localpackagelist;
-        localpackagelist = result.localpackagelist;
-      });
+    get: function ($scope) {
+      tmppackagelist = JSON.parse(localStorage.getItem(
+        'localpackagelist')
+      );
+      if (tmppackagelist==null) {
+        localpackagelist=[];
+      } else {
+        localpackagelist=tmppackagelist;
+        $scope.packageList=localpackagelist;
+      }
+      
     },
-    set: function(rulePackage) {
+    set: function (rulePackage) {
       //check if already exsists
       var count = 0;
       var duplicate = false;
@@ -27,44 +31,40 @@ service.factory('localStorage', function() {
 
       if (count == localpackagelist.length) {
         localpackagelist.push(rulePackage);
-        chrome.storage.local.set({
-          'localpackagelist': localpackagelist
-        });
+        localStorage.setItem('localpackagelist', JSON.stringify(localpackagelist));
         return localpackagelist;
       } else {
         return localpackagelist;
       }
     },
-    delete: function(rulePackage) {
+    delete: function (rulePackage) {
       var index = 0;
       while (localpackagelist[index].packageName != rulePackage.packageName) {
         index++;
       }
       localpackagelist.splice(index, 1);
-      chrome.storage.local.set({
-        'localpackagelist': localpackagelist
-      });
+      localStorage.setItem('localpackagelist', JSON.stringify(localpackagelist));
       return localpackagelist;
     },
-    export: function() {
+    export: function () {
       chrome.storage.local.get({
         'localpackagelist': []
-      }, function(list) {
+      }, function (list) {
         // Convert object to a string.
         var result = angular.toJson(list);
 
         chrome.fileSystem.chooseEntry({
           type: 'saveFile',
           suggestedName: 'rules.json'
-        }, function(writableFileEntry) {
+        }, function (writableFileEntry) {
 
           function errorHandler() {
             console.log('error');
           };
 
-          writableFileEntry.createWriter(function(writer) {
+          writableFileEntry.createWriter(function (writer) {
             writer.onerror = errorHandler;
-            writer.onwriteend = function(e) {
+            writer.onwriteend = function (e) {
               console.log('write complete');
             };
             writer.write(new Blob([result], {
@@ -75,20 +75,20 @@ service.factory('localStorage', function() {
         // Use Filesystem API to store
       });
     },
-    import: function($scope) {
+    import: function ($scope) {
       chrome.fileSystem.chooseEntry({
         type: 'openFile'
-      }, function(readOnlyEntry) {
+      }, function (readOnlyEntry) {
 
         function errorHandler() {
           console.log('error');
         };
 
-        readOnlyEntry.file(function(file) {
+        readOnlyEntry.file(function (file) {
           var reader = new FileReader();
 
           reader.onerror = errorHandler;
-          reader.onloadend = function(e) {
+          reader.onloadend = function (e) {
             loadedpackagelist = JSON.parse(e.target.result);
             //console.log(loadedpackagelist);
             for (var count = 0; count < loadedpackagelist.localpackagelist.length; count++) {
@@ -96,7 +96,7 @@ service.factory('localStorage', function() {
             }
             chrome.storage.local.set({
               'localpackagelist': localpackagelist
-            }, function() {
+            }, function () {
               $scope.packageList = localpackagelist;
               $scope.$apply();
             });

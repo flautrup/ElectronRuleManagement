@@ -1,5 +1,5 @@
 //Controller
-service.controller("qrsController", ["$scope", "$http", "qrsRules", "qrsCustProp", "localStorage", "rulePackage", "$mdToast", function($scope, $http, qrsRules, qrsCustProp, localStorage, rulePackage,$mdToast) {
+service.controller("qrsController", ["$scope", "$http", "qrsRules", "qrsCustProp", "localStorage", "rulePackage", "$mdToast", function ($scope, $http, qrsRules, qrsCustProp, localStorage, rulePackage, $mdToast) {
 
   SERVER = $scope.server;
   $scope.logedin = "Logged out";
@@ -11,18 +11,18 @@ service.controller("qrsController", ["$scope", "$http", "qrsRules", "qrsCustProp
   };
 
   //Get the list of rules, parse for custom properties and fetch the custom properies and store with rule
-  $scope.list = function() {
+  $scope.list = function () {
     // Update SERVER
     SERVER = $scope.server;
     //GET rules
     serverRuleList = qrsRules.query({
       host: "https:" + $scope.server
-    }, function() {
+    }, function () {
       console.log(serverRuleList);
     });
 
     //Wait for the result
-    serverRuleList.$promise.then(function() {
+    serverRuleList.$promise.then(function () {
 
       //Scan for custom properties
       var regexp = /@[\w\d]+[=!)\s]/g;
@@ -67,7 +67,7 @@ service.controller("qrsController", ["$scope", "$http", "qrsRules", "qrsCustProp
 
   };
 
-  $scope.getUniqueListOfCustomProperties = function(arr) {
+  $scope.getUniqueListOfCustomProperties = function (arr) {
     var n = {},
       r = [];
     for (var i = 0; i < arr.length; i++) {
@@ -80,13 +80,13 @@ service.controller("qrsController", ["$scope", "$http", "qrsRules", "qrsCustProp
   }
 
   //Store custom property in rule
-  $scope.storeCustomPropertyInRule = function(index, customPropName) {
+  $scope.storeCustomPropertyInRule = function (index, customPropName) {
     var tmpCustObj = qrsCustProp.get({
       host: "https:" + $scope.server,
       custPropName: customPropName
     });
     //Connect custom property definitions to rules that use them
-    tmpCustObj.$promise.then(function() {
+    tmpCustObj.$promise.then(function () {
       //Only store if it do not alrealy exsist
       if (tmpCustObj[0] !== undefined) {
         serverRuleList[index].customPropertyObj.push(tmpCustObj[0]);
@@ -96,32 +96,32 @@ service.controller("qrsController", ["$scope", "$http", "qrsRules", "qrsCustProp
   };
 
   //Change in rule and not added atribute.
-  $scope.toggleRule = function(rule) {
+  $scope.toggleRule = function (rule) {
     var count = 0;
     while (rule.id !== $scope.rulePackageObj.ruleList[count].id) {
       count++;
     }
-    $scope.rulePackageObj.ruleList[count].disabled = ! $scope.rulePackageObj.ruleList[count].disabled;
+    $scope.rulePackageObj.ruleList[count].disabled = !$scope.rulePackageObj.ruleList[count].disabled;
   }
 
   //Add rule to rule package
-  $scope.addToRulePackage = function(rule) {
+  $scope.addToRulePackage = function (rule) {
     $scope.rulePackageObj = rulePackage.add(rule);
-    rule.selected=true;
+    rule.selected = true;
   };
 
   //Set rulepackage name
-  $scope.setRulePackageName = function(name) {
+  $scope.setRulePackageName = function (name) {
     return rulePackage.setName(name);
   };
 
   //Set rulepackage description
-  $scope.setRulePackageDescription = function(description) {
+  $scope.setRulePackageDescription = function (description) {
     return rulePackage.setDescription(description);
   };
 
   //Saves rule package using localStorage service
-  $scope.saveRulePackage = function() {
+  $scope.saveRulePackage = function () {
     $scope.rulePackageObj = $scope.setRulePackageName($scope.rulePackageObj.packageName);
     $scope.rulePackageObj = $scope.setRulePackageDescription($scope.rulePackageObj.packageDescription);
 
@@ -131,12 +131,12 @@ service.controller("qrsController", ["$scope", "$http", "qrsRules", "qrsCustProp
   };
 
   //Clears current rule package
-  $scope.clearRulePackage = function() {
+  $scope.clearRulePackage = function () {
     $scope.rulePackageObj = rulePackage.clear();
   };
 
   //Load rule package from list of packages in localStorage
-  $scope.loadRulePackage = function(findRulePackage) {
+  $scope.loadRulePackage = function (findRulePackage) {
     for (count = 0; count < $scope.packageList.length; count++) {
       if ($scope.packageList[count].packageName == findRulePackage.packageName) {
         $scope.rulePackageObj = findRulePackage;
@@ -146,12 +146,12 @@ service.controller("qrsController", ["$scope", "$http", "qrsRules", "qrsCustProp
   };
 
   //Export packageList with all content
-  $scope.exportPackageList = function() {
+  $scope.exportPackageList = function () {
     localStorage.export();
   }
 
   //Import packageList with and add to current list
-  $scope.importPackageList = function() {
+  $scope.importPackageList = function () {
     localStorage.import($scope);
     console.log($scope.packageList);
   }
@@ -160,7 +160,7 @@ service.controller("qrsController", ["$scope", "$http", "qrsRules", "qrsCustProp
   //Note:
   //      Read rule with name if exsist dissable and  create new with pkg prefix
   //      If rule contains custom properties add if not already exsists
-  $scope.uploadRulePackage = function(rulePackageObj) {
+  $scope.uploadRulePackage = function (rulePackageObj) {
     console.log(rulePackageObj);
     var uniqueListOfCustProp = {};
 
@@ -210,7 +210,7 @@ service.controller("qrsController", ["$scope", "$http", "qrsRules", "qrsCustProp
   };
 
   //Check if a rule exsists return object if found else null
-  $scope.ruleExsists = function(ruleName) {
+  $scope.ruleExsists = function (ruleName) {
     for (var count = 0; count < serverRuleList.length; count++) {
       if (serverRuleList[count].name === ruleName) {
         return serverRuleList[count];
@@ -220,11 +220,11 @@ service.controller("qrsController", ["$scope", "$http", "qrsRules", "qrsCustProp
   };
 
   //If the custom property do not exsist create it
-  $scope.createIfCustomPropertyDontExsists = function(uniqueListOfCustProp) {
+  $scope.createIfCustomPropertyDontExsists = function (uniqueListOfCustProp) {
     var tmpCustomProperties = qrsCustProp.query({
       host: "https:" + $scope.server
     });
-    tmpCustomProperties.$promise.then(function() {
+    tmpCustomProperties.$promise.then(function () {
       for (var key in uniqueListOfCustProp) {
         for (var count = 0; count < tmpCustomProperties.length; count++) {
           if (tmpCustomProperties[count].name === key) {
@@ -240,21 +240,21 @@ service.controller("qrsController", ["$scope", "$http", "qrsRules", "qrsCustProp
   };
 
   //Delete rulepackage
-  $scope.deleteRulePackage = function(findRuleName) {
+  $scope.deleteRulePackage = function (findRuleName) {
     $scope.packageList = localStorage.delete(findRuleName);
   }
 
   //Get the details of a rule with id
-  $scope.detail = function(id) {
+  $scope.detail = function (id) {
     $scope.ruleDetail = qrsRule.get({
       ruleId: id
-    }, function() {
+    }, function () {
       console.log($scope.ruleDetail);
     });
   };
 
   //Change UI if rule is dissabled
-  $scope.disableRow = function(rule) {
+  $scope.disableRow = function (rule) {
     if (rule.disabled) {
       return "core-item ruledissabled";
     } else {
@@ -263,36 +263,78 @@ service.controller("qrsController", ["$scope", "$http", "qrsRules", "qrsCustProp
   }
 
   //Chang UI if rule is selected
-$scope.ruleSelected = function(rule) {
-  if (rule.selected) {
-    return "ruleselected";
-  } else {
-    return "";
+  $scope.ruleSelected = function (rule) {
+    if (rule.selected) {
+      return "ruleselected";
+    } else {
+      return "";
+    }
   }
-}
 
-//Select all rules for a rule package
-$scope.selectAllRules = function() {
-  for (var rulecount = 0; rulecount < serverRuleList.length; rulecount++) {
-    $scope.addToRulePackage(serverRuleList[rulecount]);
+  //Select all rules for a rule package
+  $scope.selectAllRules = function () {
+    for (var rulecount = 0; rulecount < serverRuleList.length; rulecount++) {
+      $scope.addToRulePackage(serverRuleList[rulecount]);
+    }
   }
-}
 
   //Login to server
-  $scope.login = function() {
+  $scope.login = function () {
 
-    $http.get("https://" + $scope.server + "/hub?xrfkey=" + XRFKEY, {
-      withCredentials: true
-    }).then(function (response) {
-      $scope.logedin = "Logged in";
-      $scope.list();
-    }, function (response) {
-      $scope.logedin = "Login failed";
-      var url="https://"+$scope.server+"/hub";
-      var alert="<md-toast>Please access <a href="+url+" target='_blank'>"+url+"</a> in browser</md-toast>";
-      $mdToast.show({template: alert});
-      //$mdToast.show($mdToast.simple().textContent(alert));
-    });
+    //Configuration file that creates configuration for mashup, mashupredirectexample and qlikextwebauth  
+    config = {
+      // Host name of Qlik Sense server
+      host: $scope.server,
+      //Virtual proxy to use with mashup
+      prefix: "/",
+      //Port to use on Qlik Sense server
+      port: "443",
+      //Using TLS for encryption or not
+      isSecure: true,
+      //targetUri is the page to redirect to after successfull authentication for ticket consumption
+      targetUri: "https://" + $scope.server + "/resources/assets/external/requirejs/require.js",
+      //baseUri is the page that mashupredirectexample.html use as base for redirecting back to the mashup server. 
+      //The back parameter to the login function is added to this uri
+      baseUri: ""
+    };
+    //Ask if logged in redirect to page if not. Return to main page.
+    $scope.qlikSenseLogin(config).then($scope.list()).catch(function (Error) {
+      console.log('oh no', error);
+    })
   };
+
+
+
+  $scope.qlikSenseLogin = function (config, back) {
+    return new Promise(function (resolve, reject) {
+      var req = new XMLHttpRequest();
+      // Include credentials with request
+      req.withCredentials = true;
+      req.onload = function (ev) {
+        var answer = JSON.parse(req.responseText);
+        console.log(answer);
+        if (req.status == 200) {
+          if (answer.userId) {
+            // If userId is in answer the user is loggedin and promise can be resolved
+            resolve(req.response);
+          } else if (answer.loginUri) {
+            // If loginUri is present in answer the user is not logged in and we redirect
+            // to login page aquired from the PersonalAPI for the virtual proxy
+            // Send IPC command to open page in seperate Window
+            ipc.send('loadPage', answer.loginUri);
+          }
+        } else {
+          // If status is not 200 reject promise
+          reject(Error(req.status + req.response));
+        }
+      }
+      //Build request to PersonalAPI to get information on user
+      tmpTargetUri = config.targetUri + "?back=" + back;
+      personalUrl = (config.isSecure ? "https://" : "http://") + config.host + (config.port ? ":" + config.port : "") + config.prefix + "qps/user?targetUri=" + tmpTargetUri;
+      req.open('GET', personalUrl);
+      req.send();
+
+    })
+  }
 
 }]);
