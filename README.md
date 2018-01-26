@@ -1,19 +1,19 @@
-#Rule Management
+# Rule Management
 
-##Platform:
+## Platform:
 Electron
 
-##State:
+## State:
 Beta
 
-##Description:
+## Description:
 This is a Electron app developed to help the reuse and transfer of rules between
 Qlik Sense environments. The tool is able to extract rule from a Qlik Sense
 installation store them as packages and then upload them to a new Qlik Sense
 system. It also supports exporting of a library of rule packages so that it can
 be used by other administrators
 
-##Sense Configuration
+## Sense Configuration
 The tool uses windows authentication. The following is needed for the tool to be
 able to access Qlik Sense.
 * Default proxy accessed without a virtual proxy prefix supports Windows authentication
@@ -21,7 +21,7 @@ able to access Qlik Sense.
 * Depending on the certificate setup it might also be needed to access this virtual proxy first from the Chrome browser.
 
 
-##How to use
+## How to use
 * Type in the name of the server in the toolbar
 * Press the lock to log into the server and get the list of rules and their associated custom properties
 * Press the rule icon in front of the rule to select it to be included in a rule package

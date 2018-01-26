@@ -47,6 +47,8 @@ service.factory('localStorage', function () {
       return localpackagelist;
     },
     export: function () {
+      // Rewrite to use to store files
+      // https://ourcodeworld.com/articles/read/106/how-to-choose-read-save-delete-or-create-a-file-with-electron-framework
       chrome.storage.local.get({
         'localpackagelist': []
       }, function (list) {
@@ -76,6 +78,8 @@ service.factory('localStorage', function () {
       });
     },
     import: function ($scope) {
+      // Use to import file
+      // https://ourcodeworld.com/articles/read/106/how-to-choose-read-save-delete-or-create-a-file-with-electron-framework
       chrome.fileSystem.chooseEntry({
         type: 'openFile'
       }, function (readOnlyEntry) {

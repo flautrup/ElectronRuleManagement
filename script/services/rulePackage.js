@@ -1,4 +1,4 @@
-//Service to manage logal storage of rule packages
+//Service to manage local storage of rule packages
 service.factory('rulePackage', function() {
   // Add support for reading and storing local storage.
   var rulePackageObj = {
