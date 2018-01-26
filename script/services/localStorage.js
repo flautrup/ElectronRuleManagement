@@ -3,18 +3,19 @@ service.factory('localStorage', function () {
   // Add support for reading and storing local storage.
   var localpackagelist = [];
 
+  const dialog = remote.dialog;
+
   return {
     get: function ($scope) {
       tmppackagelist = JSON.parse(localStorage.getItem(
-        'localpackagelist')
-      );
-      if (tmppackagelist==null) {
-        localpackagelist=[];
+        'localpackagelist'));
+      if (tmppackagelist == null) {
+        localpackagelist = [];
       } else {
-        localpackagelist=tmppackagelist;
-        $scope.packageList=localpackagelist;
+        localpackagelist = tmppackagelist;
+        $scope.packageList = localpackagelist;
       }
-      
+
     },
     set: function (rulePackage) {
       //check if already exsists
@@ -49,37 +50,61 @@ service.factory('localStorage', function () {
     export: function () {
       // Rewrite to use to store files
       // https://ourcodeworld.com/articles/read/106/how-to-choose-read-save-delete-or-create-a-file-with-electron-framework
-      chrome.storage.local.get({
-        'localpackagelist': []
-      }, function (list) {
-        // Convert object to a string.
-        var result = angular.toJson(list);
+      
+      tmppackagelist = JSON.parse(localStorage.getItem(
+        'localpackagelist'));
 
-        chrome.fileSystem.chooseEntry({
-          type: 'saveFile',
-          suggestedName: 'rules.json'
-        }, function (writableFileEntry) {
+      if (tmppackagelist == null) {
+        list = [];
+      } else {
+        list = tmppackagelist;
+      }
 
-          function errorHandler() {
-            console.log('error');
-          };
+      var result = angular.toJson(list);
 
-          writableFileEntry.createWriter(function (writer) {
-            writer.onerror = errorHandler;
-            writer.onwriteend = function (e) {
-              console.log('write complete');
+      //Save file
+        dialog.showSaveDialog((fileName) => {
+
+          fs.writeFile(fileName, result, (err) => {
+            if(fileName === undefined) {
+              console.log("File not saved");
+              return;
+            }
+          })
+
+        })
+        /*chrome.storage.local.get({
+          'localpackagelist': []
+        }, function (list) {
+          // Convert object to a string.
+          var result = angular.toJson(list);
+
+          chrome.fileSystem.chooseEntry({
+            type: 'saveFile',
+            suggestedName: 'rules.json'
+          }, function (writableFileEntry) {
+
+            function errorHandler() {
+              console.log('error');
             };
-            writer.write(new Blob([result], {
-              type: "application/json"
-            }));
-          }, errorHandler);
-        });
+
+            writableFileEntry.createWriter(function (writer) {
+              writer.onerror = errorHandler;
+              writer.onwriteend = function (e) {
+                console.log('write complete');
+              };
+              writer.write(new Blob([result], {
+                type: "application/json"
+              }));
+            }, errorHandler);
+          });*/
         // Use Filesystem API to store
-      });
     },
     import: function ($scope) {
       // Use to import file
       // https://ourcodeworld.com/articles/read/106/how-to-choose-read-save-delete-or-create-a-file-with-electron-framework
+
+
       chrome.fileSystem.chooseEntry({
         type: 'openFile'
       }, function (readOnlyEntry) {
