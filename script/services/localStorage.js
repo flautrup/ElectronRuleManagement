@@ -48,9 +48,6 @@ service.factory('localStorage', function () {
       return localpackagelist;
     },
     export: function () {
-      // Rewrite to use to store files
-      // https://ourcodeworld.com/articles/read/106/how-to-choose-read-save-delete-or-create-a-file-with-electron-framework
-      
       tmppackagelist = JSON.parse(localStorage.getItem(
         'localpackagelist'));
 
@@ -63,77 +60,44 @@ service.factory('localStorage', function () {
       var result = angular.toJson(list);
 
       //Save file
-        dialog.showSaveDialog((fileName) => {
+      dialog.showSaveDialog((fileName) => {
 
-          fs.writeFile(fileName, result, (err) => {
-            if(fileName === undefined) {
-              console.log("File not saved");
-              return;
-            }
-          })
-
+        fs.writeFile(fileName, result, (err) => {
+          if (fileName === undefined) {
+            console.log("File not saved");
+            return;
+          }
         })
-        /*chrome.storage.local.get({
-          'localpackagelist': []
-        }, function (list) {
-          // Convert object to a string.
-          var result = angular.toJson(list);
 
-          chrome.fileSystem.chooseEntry({
-            type: 'saveFile',
-            suggestedName: 'rules.json'
-          }, function (writableFileEntry) {
-
-            function errorHandler() {
-              console.log('error');
-            };
-
-            writableFileEntry.createWriter(function (writer) {
-              writer.onerror = errorHandler;
-              writer.onwriteend = function (e) {
-                console.log('write complete');
-              };
-              writer.write(new Blob([result], {
-                type: "application/json"
-              }));
-            }, errorHandler);
-          });*/
-        // Use Filesystem API to store
+      })
     },
     import: function ($scope) {
-      // Use to import file
-      // https://ourcodeworld.com/articles/read/106/how-to-choose-read-save-delete-or-create-a-file-with-electron-framework
+      //Open file
+      dialog.showOpenDialog((fileName) => {
+
+        fs.readFile(fileName[0], 'utf-8', (err, data) => {
+          if (err) {
+            console.log("File not read " + err.message);
+            return;
+          }
+
+          console.log(data);
+
+          loadedpackagelist = JSON.parse(data);
+          //console.log(loadedpackagelist);
+          for (var count = 0; count < loadedpackagelist.length; count++) {
+            localpackagelist.push(loadedpackagelist[count]);
+          }
 
 
-      chrome.fileSystem.chooseEntry({
-        type: 'openFile'
-      }, function (readOnlyEntry) {
+          localStorage.setItem('localpackagelist', JSON.stringify(localpackagelist));
 
-        function errorHandler() {
-          console.log('error');
-        };
+          $scope.packageList = localpackagelist;
+          $scope.$apply();
 
-        readOnlyEntry.file(function (file) {
-          var reader = new FileReader();
 
-          reader.onerror = errorHandler;
-          reader.onloadend = function (e) {
-            loadedpackagelist = JSON.parse(e.target.result);
-            //console.log(loadedpackagelist);
-            for (var count = 0; count < loadedpackagelist.localpackagelist.length; count++) {
-              localpackagelist.push(loadedpackagelist.localpackagelist[count]);
-            }
-            chrome.storage.local.set({
-              'localpackagelist': localpackagelist
-            }, function () {
-              $scope.packageList = localpackagelist;
-              $scope.$apply();
-            });
-          };
-
-          reader.readAsText(file);
-        });
-      });
+        })
+      })
       //load list, merge lists and store.
     }
   };
