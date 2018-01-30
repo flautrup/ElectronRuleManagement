@@ -9,6 +9,10 @@
        url(assets/MaterialIcons-Regular.ttf) format('truetype');
 }
 
+body {
+  font-size: 12px;
+}
+
 .material-icons {
   font-family: 'Material Icons';
   font-weight: normal;
