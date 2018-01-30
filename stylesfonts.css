@@ -48,3 +48,6 @@ body {
 .ruleselected {
   color: green;
 }
+
+
+md-input-container.hide-error-msg .md-errors-spacer:empty { display: none; }
