@@ -13,7 +13,7 @@ let loginWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 700})
+  mainWindow = new BrowserWindow({width: 1000, height: 720})
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`)
@@ -30,7 +30,7 @@ function createWindow () {
   })
 
   ipcMain.on('loadPage', (event, arg) => {
-    loginWindow = new BrowserWindow({width: 800, height: 700})
+    loginWindow = new BrowserWindow({width: 1000, height: 720})
 
     // and load the index.html of the app.
     loginWindow.loadURL(arg);

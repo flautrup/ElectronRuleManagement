@@ -17,12 +17,11 @@
           <i class="material-icons">menu</i>
         </md-button>
         <span class="md-title" flex>Security Rule Management</span>
-        <span flex class="md-title">{{logedin}}</span>
-        <span flex>
-          <md-input-container md-no-float class="hide-error-msg">
+          <md-input-container md-no-float class="hide-error-msg" flex="40">
+            <label>Server</label>
             <input placeholder="Server" value="{{server}}" ng-model="server" committedvalue="{{server}}">
           </md-input-container>
-        </span>
+        <span flex class="md-title">{{logedin}}</span>
         <md-button ng-click="login()">
           <i class="material-icons">lock</i>
         </md-button>
@@ -57,7 +56,7 @@
               </md-list>
             </md-content>
           </div>
-          <md-toolbar layout="row">
+          <md-toolbar layout="row" class="md-medium-tall" layout-align="start center">
             <md-button ng-click="selectAllRules()">
               <i class="material-icons">done_all</i>
             </md-button>
@@ -101,7 +100,7 @@
               <md-divider></md-divider>
             </md-list>
           </div>
-          <md-toolbar layout="row">
+          <md-toolbar layout="row" class="md-medium-tall">
             <md-button ng-click="saveRulePackage()">
               <i class="material-icons">save</i>
             </md-button>
@@ -137,7 +136,7 @@
                 </md-list-item>
                 <md-list>
             </div>
-            <md-toolbar layout="row">
+            <md-toolbar layout="row" class="md-medium-tall">
               <md-button ng-click="importPackageList()" class="btn1">
                 <i class="material-icons">file_upload</i>
               </md-button>
