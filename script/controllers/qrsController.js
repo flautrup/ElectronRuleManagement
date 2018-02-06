@@ -190,6 +190,7 @@ service.controller("qrsController", ["$scope", "$http", "qrsRules", "qrsCustProp
 
       //Remove id to create new
       delete rule.id;
+      delete rule.seedId;
       rule.name = rule.name + "_pkg"
 
       qrsRules.save({
