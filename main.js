@@ -1,7 +1,11 @@
-const electron = require('electron')
+const electron = require('electron');
 const {ipcMain} = require('electron');
+const {session} = require('electron');
+
 // Module to control application life.
 const app = electron.app
+//Add to allow for self-signed certificates
+//app.commandLine.appendSwitch('ignore-certificate-errors');
 
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
@@ -18,8 +22,13 @@ function createWindow () {
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`)
 
+  //Todo: fix a proper content security policy
+  //session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+  //  callback({responseHeaders: `default-src 'rd-flp-86.rdlund.qliktech.com'`})
+  //})
+
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
