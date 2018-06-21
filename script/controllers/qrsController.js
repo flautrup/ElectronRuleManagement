@@ -190,6 +190,7 @@ service.controller("qrsController", ["$scope", "$http", "qrsRules", "qrsCustProp
 
       //Remove id to create new
       delete rule.id;
+      delete rule.seedId;
       rule.name = rule.name + "_pkg"
 
       qrsRules.save({
@@ -316,12 +317,14 @@ service.controller("qrsController", ["$scope", "$http", "qrsRules", "qrsCustProp
         if (req.status == 200) {
           if (answer.userId) {
             // If userId is in answer the user is loggedin and promise can be resolved
+            $scope.logedin = "Logged in";
             resolve(req.response);
           } else if (answer.loginUri) {
             // If loginUri is present in answer the user is not logged in and we redirect
             // to login page aquired from the PersonalAPI for the virtual proxy
             // Send IPC command to open page in seperate Window
             ipc.send('loadPage', answer.loginUri);
+            $scope.logedin = "Logged in";
           }
         } else {
           // If status is not 200 reject promise
